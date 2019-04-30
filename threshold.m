@@ -1,0 +1,83 @@
+%确定空间权重矩阵阈值
+y1=data(:,1);
+y2=data(:,2);
+y3=data(:,3);
+y4=data(:,4);
+y5=data(:,5);
+y6=data(:,6);
+y1dev=y1-mean(y1);
+y2dev=y2-mean(y2);
+y3dev=y3-mean(y3);
+y4dev=y4-mean(y4);
+y5dev=y5-mean(y5);
+y6dev=y6-mean(y6);
+x=[ones(33,1) data(:,7)];
+t1=zeros(50,4);
+t2=zeros(50,4);
+t3=zeros(50,4);
+t4=zeros(50,4);
+t5=zeros(50,4);
+t6=zeros(50,4);
+info.lflag=0;
+for d=1:100
+    W=W2;
+    for i=1:33
+        for j=1:33
+            if W(i,j)<d*100
+                W(i,j)=1;
+            else
+                W(i,j)=0;
+            end
+        W(i,i)=0;    
+        end
+    end
+    W=normw(W);
+    moran1=moran(y1dev,x,W);
+    moran2=moran(y2dev,x,W);
+    moran3=moran(y3dev,x,W);
+    moran4=moran(y4dev,x,W);
+    moran5=moran(y5dev,x,W);
+    moran6=moran(y6dev,x,W);
+    lmerr1=lmerror_panel(y1dev,x,W);
+    lmerr2=lmerror_panel(y2dev,x,W);
+    lmerr3=lmerror_panel(y3dev,x,W);
+    lmerr4=lmerror_panel(y4dev,x,W);
+    lmerr5=lmerror_panel(y5dev,x,W);
+    lmerr6=lmerror_panel(y6dev,x,W);
+    lmlag1=lmlag_panel(y1dev,x,W);
+    lmlag2=lmlag_panel(y2dev,x,W);
+    lmlag3=lmlag_panel(y3dev,x,W);
+    lmlag4=lmlag_panel(y4dev,x,W);
+    lmlag5=lmlag_panel(y5dev,x,W);
+    lmlag6=lmlag_panel(y6dev,x,W);
+    t1(d,1)=moran1.prob;
+    t2(d,1)=moran2.prob;
+    t3(d,1)=moran3.prob;
+    t4(d,1)=moran4.prob;
+    t5(d,1)=moran5.prob;
+    t6(d,1)=moran6.prob;
+    t1(d,2)=lmerr1.prob;
+    t2(d,2)=lmerr2.prob;
+    t3(d,2)=lmerr3.prob;
+    t4(d,2)=lmerr4.prob;
+    t5(d,2)=lmerr5.prob;
+    t6(d,2)=lmerr6.prob;
+    t1(d,3)=lmlag1.prob;
+    t2(d,3)=lmlag2.prob;
+    t3(d,3)=lmlag3.prob;
+    t4(d,3)=lmlag4.prob;
+    t5(d,3)=lmlag5.prob;
+    t6(d,3)=lmlag6.prob;
+end
+subplot(3,2,1);
+plot(t1);
+subplot(3,2,2);
+plot(t2);
+subplot(3,2,3);
+plot(t3);
+subplot(3,2,4);
+plot(t4);
+subplot(3,2,5);
+plot(t5);
+subplot(3,2,6);
+plot(t6);
